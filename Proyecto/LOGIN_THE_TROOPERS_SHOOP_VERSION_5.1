@@ -1,0 +1,541 @@
+Proceso LOGIN_THE_TROOPERS
+	Definir usuarios, idioma, alojamiento Como Caracter;
+	Definir cantidad_usuarios, aux, i Como Entero;
+	Dimension usuarios[10,4], Alojamiento[10,4,3];
+	cantidad_usuarios<-2; 
+	
+	///Definimos 2 usuarios para poder hacer uso del login
+	usuarios[0,0] <- "Pagano";
+	usuarios[0,1] <- "123456";
+	usuarios[0,2] <- "francopaganoo2015@gmail.com";
+	usuarios[0,3] <- "vendedor";
+	usuarios[1,0] <- "Lassa"; 
+	usuarios[1,1] <- "123456";
+	usuarios[1,2] <- "nelsonlazza96@gmail.com"; 
+	usuarios[1,3] <- "vendedor";
+	
+	para i<-0 Hasta 9 Hacer
+		Alojamiento[i,0,0] <- "0";
+	FinPara
+	
+	Escribir "-------------------------------";
+	Escribir "BIENVENIDO A THE TROOPERS STAY";
+	Escribir "-------------------------------";
+	Escribir "Seleccione el idioma: ";
+	Escribir "1. Español";
+	Escribir "2. Ingles"; 
+	leer aux; 
+	Segun aux Hacer
+		1: 
+			idioma <- "Español";
+		2: 
+			idioma <- "Ingles"; 
+	FinSegun
+	
+	Login(usuarios, cantidad_usuarios, idioma, alojamiento);
+	
+FinProceso
+
+SubProceso Login(usuarios Por Referencia, cantidad_usuarios Por Referencia, idioma Por Valor, Alojamiento Por Referencia)
+	Definir opcion Como entero;
+	
+	Limpiar Pantalla;
+	//En el menu de ingreso a la app tenemos las dos opciones principales 
+	si idioma = "Ingles" Entonces
+		Escribir "-------------------------------";
+		Escribir "WELCOME TO THE TROOPERS STAY";
+		Escribir "-------------------------------";
+		Escribir "1. LOGIN";
+		Escribir "2. REGISTER";
+		Escribir "0. SHOW";
+	SiNo
+		si idioma = "Español" Entonces
+			Escribir "-------------------------------";
+			Escribir "BIENVENIDO A THE TROOPERS STAY";
+			Escribir "-------------------------------";
+			Escribir "1. INGRESAR";
+			Escribir "2. REGISTRARSE";
+			Escribir "0. MOSTRAR";
+		FinSi
+	FinSi
+	leer opcion; 
+	
+	Segun opcion Hacer
+		1: 
+			Ingresar(cantidad_usuarios, usuarios, idioma, Alojamiento);
+		2: 
+			registrarse(cantidad_usuarios, usuarios, idioma, Alojamiento);
+		3: 
+			Escribir "Adios"; 
+		0: 
+			mostrar(cantidad_usuarios, usuarios, idioma, Alojamiento);
+		De Otro Modo:
+			Login(usuarios, cantidad_usuarios, idioma, alojamiento);
+	FinSegun
+	
+FinSubProceso
+
+SubProceso ingresar(cantidad_usuarios Por Referencia, usuarios Por Referencia, idioma Por Valor, Alojamiento Por Referencia)
+	Definir usuario Como Caracter;
+	Definir i, aux Como Entero;
+	Definir encontrado Como Logico;
+	
+	//Le pedimos que ingrese un usuario, el cual se verificara.
+	Limpiar Pantalla;
+	si idioma = "Ingles" Entonces
+		Escribir "-------------------------------";
+		Escribir "WELCOME TO THE TROOPERS SHOP";
+		Escribir "-------------------------------";
+		Escribir "USER: " Sin Saltar;
+	SiNo
+		si idioma = "Español" Entonces
+			Escribir "-------------------------------";
+			Escribir "BIENVENIDO A THE TROOPERS SHOOP";
+			Escribir "-------------------------------";
+			Escribir "USUARIO: " Sin Saltar;
+		FinSi
+	FinSi
+	Leer usuario;
+	
+	//Verificamos si el usuario ingresado se encuentra entre los que estan en la base
+	encontrado<-falso; 
+	para i<-0 Hasta cantidad_usuarios-1 Hacer
+		si usuario = usuarios[i,0] Entonces
+			encontrado<-Verdadero;
+			aux <- i;
+		FinSi
+	FinPara
+	
+	//En caso de estar, se procede a pedir la contraseña, sino debe intentar denuevo enviandolo denuevo al login principal. 
+	si  encontrado = Verdadero Entonces
+		Contrasena(usuarios, cantidad_usuarios, usuario, aux, idioma, Alojamiento);
+	SiNo
+		Limpiar Pantalla;
+		
+		si idioma = "Ingles" Entonces
+			Escribir "-------------------------------";
+			Escribir "WELCOME TO THE TROOPERS SHOP";
+			Escribir "-------------------------------";
+			Escribir "INCORRECT USER";
+			Escribir "Try again";
+		SiNo
+			si idioma = "Español" Entonces
+				Escribir "-------------------------------";
+				Escribir "BIENVENIDO A THE TROOPERS SHOOP";
+				Escribir "-------------------------------";
+				Escribir "USUARIO INCORRECTO";
+				Escribir "Intente denuevo"; 
+			FinSi
+		FinSi
+		Esperar Tecla;
+		Login(usuarios, cantidad_usuarios, idioma, alojamiento);
+	FinSi
+	
+FinSubProceso
+
+SubProceso Contrasena(usuarios Por Referencia, cantidad_usuarios Por Referencia, usuario Por Valor, aux por valor, idioma Por Valor, Alojamiento Por Referencia)
+	Definir intentos Como entero;
+	Definir pasword Como Caracter;
+	Definir correcta Como Logico;
+	
+	intentos <- 0;
+	correcta <- falso;
+	//Para la contraseña arrastramos un dato del sub proceso del usuario, ya que en la matriz,
+	//el primer dato representa al ususario y el segundo los dato relacionados con el mismo,
+	// como lo seria en este caso la contraseña. 
+	//Este SubProceso se repetira 3 veces en caso que la contraseña sea ingresada de forma incorrecta. 
+	Repetir
+		Limpiar Pantalla;
+		
+		si idioma = "Ingles" Entonces
+			Escribir "-------------------------------";
+			Escribir "WELCOME TO THE TROOPERS SHOP";
+			Escribir "-------------------------------";
+			Escribir "USER: ", usuario;
+			Escribir "PASSWORD: " Sin Saltar;
+		SiNo
+			si idioma = "Español" Entonces
+				Escribir "-------------------------------";
+				Escribir "BIENVENIDO A THE TROOPERS SHOOP";
+				Escribir "-------------------------------";
+				Escribir "USUARIO: ", usuario;
+				Escribir "CONTRASEÑA: " Sin Saltar;
+			FinSi
+		FinSi
+		Leer pasword;
+		
+		si pasword = usuarios[aux,1] Entonces
+			correcta <- Verdadero;
+		SiNo
+			intentos <- intentos + 1;
+			si correcta = Falso y intentos < 3 Entonces
+				Limpiar Pantalla; 
+				
+				si idioma = "Ingles" Entonces
+					Escribir "-------------------------------";
+					Escribir "WELCOME TO TROOPERS STAY";
+					Escribir "-------------------------------";
+					Escribir "USER: ", usuario;
+					Escribir "Remaining attempts: ", 3 - intentos;
+					Esperar Tecla;
+				SiNo
+					si idioma = "Español" Entonces
+						Escribir "-------------------------------";
+						Escribir "BIENVENIDO A THE TROOPERS SHOOP";
+						Escribir "-------------------------------";
+						Escribir "USUARIO: ", usuario;
+						Escribir "CONTRASEÑA INCORRECTA";
+						Escribir "Intentos restantes: ", 3 - intentos;
+						Esperar Tecla;
+					FinSi
+				FinSi
+			FinSi
+		FinSi
+	Hasta Que intentos > 2 o correcta = Verdadero
+	
+	si correcta = Verdadero y intentos = 3 o  correcta = Verdadero Entonces
+		si usuarios[aux,3] = "vendedor" Entonces
+			Definir cantidadmueble Como Entero;
+			cantidadmueble <- ConvertirANumero(Alojamiento[aux,0,0]); 
+			menuingraeso(aux, Alojamiento, cantidadmueble);
+		SiNo
+			si usuarios[aux,3] = "cliente" Entonces
+				Escribir "Hola LOCATARIO"; 
+			FinSi
+			
+		FinSi
+	SiNo
+		Limpiar Pantalla;
+		
+		si idioma = "Ingles" Entonces
+			Escribir "-------------------------------";
+			Escribir "WELCOME TO TROOPERS STAY";
+			Escribir "-------------------------------";
+			Escribir "The entered password is incorrect";
+			Escribir "Press ENTER to go back to the beginning";
+		SiNo
+			si idioma = "Español" Entonces
+				Escribir "-------------------------------";
+				Escribir "BIENVENIDO A THE TROOPERS SHOOP";
+				Escribir "-------------------------------";
+				Escribir "La contraseña ingresada es incorrecta";
+				Escribir "Presiona ENTER para volver al inicio";
+			FinSi
+		FinSi
+		
+		Esperar Tecla;
+		Login(usuarios, cantidad_usuarios, idioma, Alojamiento);
+	FinSi
+	Login(usuarios, cantidad_usuarios, idioma, Alojamiento);
+FinSubProceso
+
+SubProceso registrarse(cantidad_usuarios, usuarios, idioma,Alojamiento Por Referencia)
+	Definir dato Como Caracter;
+	Definir i, aux Como Entero;
+	Definir verificacion Como Logico;
+	
+	//Si seleeciona la opcion de registrarse, lo envia al subproceso de registrarse, en el cual
+	//como primera instancia se ingresa un correo.
+	Limpiar Pantalla;
+	
+	si idioma = "Ingles" Entonces
+		Escribir "-------------------------------";
+		Escribir "WELCOME TO THE TROOPERS SHOOP";
+		Escribir "-------------------------------";
+		Escribir "____________REGISTER___________";
+		Escribir "Enter your email";
+	SiNo
+		si idioma = "Español" Entonces
+			Escribir "-------------------------------";
+			Escribir "BIENVENIDO A THE TROOPERS SHOOP";
+			Escribir "-------------------------------";
+			Escribir "____________REGISTRO___________";
+			Escribir "Ingrese su email";
+		FinSi
+	FinSi
+	leer dato;
+
+	//si el correo ya esta relacionado con un usuario, el mismo notificara. 
+	//En caso contrario, procedera a completar los datos para crear la nueva cuenta. 
+	verificacion<-falso;
+	para i <- 0 Hasta cantidad_usuarios-1 Hacer
+		si dato = usuarios[i,2] Entonces
+			verificacion <- Verdadero;
+			aux <- i;
+		FinSi
+	FinPara
+	
+	//Tambien en caso de crear un nuevo usuario, no puede ser igual a uno existente en la base, por lo 
+	//que se va a repetir el proceso de ingresar usuario hasta que ingrese uno que no se encuentre en 
+	//la base de datos. 
+	si verificacion = Verdadero Entonces
+		
+		si idioma = "Ingles" Entonces
+			Escribir "The entered email is already registered with the username: ", usuarios[aux,0];
+		SiNo
+			si idioma = "Español" Entonces
+				Escribir "El correo ingresado ya se encuentra registrado con el ususario: ", usuarios[aux,0];
+			FinSi
+		FinSi
+		Esperar Tecla;
+		registrarse(cantidad_usuarios, usuarios, idioma, Alojamiento);
+	SiNo
+		Limpiar Pantalla;
+		cantidad_usuarios <- cantidad_usuarios + 1;
+		//Se guarda el correo en la nueva posicion. 
+		usuarios[cantidad_usuarios -1,2] <- dato;
+		Repetir
+			verificacion <- falso;
+			Limpiar Pantalla;
+			
+			si idioma = "Ingles" Entonces
+				Escribir "-------------------------------";
+				Escribir "WELCOME TO THE TROOPERS SHOOP";
+				Escribir "-------------------------------";
+				Escribir "____________REGISTER___________";
+				Escribir "ENTER A USERNAME: " Sin Saltar;
+			SiNo
+				si idioma = "Español" Entonces
+					Escribir "-------------------------------";
+					Escribir "BIENVENIDO A THE TROOPERS SHOOP";
+					Escribir "-------------------------------";
+					Escribir "__________REGISTRARSE__________";
+					Escribir "INGRESE UN USUARIO: " Sin Saltar;
+				FinSi
+			FinSi
+			
+			leer dato; 
+			
+			para i<-0 Hasta cantidad_usuarios-2 Hacer
+				si dato = usuarios[i,0] entonces 
+					si idioma = "Ingles" Entonces
+						Escribir "The entered username already exists. Please enter another one";
+					SiNo
+						si idioma = "Español" Entonces
+							Escribir "El usuario ingresado ya existe, porfavor, ingrese otro";
+						FinSi
+					FinSi
+					Esperar Tecla;
+					verificacion <- Verdadero;
+				FinSi
+			FinPara
+			
+		Hasta Que verificacion = falso; 
+		//En caso de encontrar un usuario no repetido, se asigna a la matriz
+		usuarios[cantidad_usuarios-1,0]<-dato;
+		
+		//se procede con la contraseña
+		si idioma = "Ingles" Entonces
+			Escribir "ENTER A PASSWORD: " Sin Saltar;
+		SiNo
+			si idioma = "Español" Entonces
+				Escribir "INGRESE UNA CONTRASEÑA: " Sin Saltar;
+			FinSi
+		FinSi
+		leer usuarios[cantidad_usuarios-1,1];
+		
+		Repetir
+			
+			si idioma = "Ingles" Entonces
+				Escribir "Select the type of user";
+				Escribir "1. Seller";
+				Escribir "2. Client";
+			SiNo
+				si idioma = "Español" Entonces
+					Escribir "Seleccione el tipo de usuario";
+					Escribir "1. Vendedor";
+					Escribir "2. Cliente";
+				FinSi
+			FinSi
+			leer aux; 
+			
+			Segun aux hacer
+				1: 
+					usuarios[cantidad_usuarios -1,3] <- "vendedor";
+				2:
+					usuarios[cantidad_usuarios -1,3] <- "cliente";
+			FinSegun
+			
+		Hasta Que aux = 1 o aux = 2
+		
+		
+		//SIMULAMOS UN SISTEMA DE CARGA DE DATOS
+		para i<-0 Hasta 100 con paso 20 Hacer
+			Limpiar Pantalla;
+			
+			si idioma = "Ingles" Entonces
+				Escribir "-------------------------------";
+				Escribir "WELCOME TO THE TROOPERS SHOOP";
+				Escribir "-------------------------------";
+				Escribir "   PROCESSING DATA: ", i,"%   ";
+			SiNo
+				si idioma = "Español" Entonces
+					Escribir "-------------------------------";
+					Escribir "BIENVENIDO A THE TROOPERS SHOOP";
+					Escribir "-------------------------------";
+					Escribir "   PROCESANDO DATOS: ", i,"%   ";
+				FinSi
+			FinSi
+			Esperar 1 Segundos;
+		FinPara
+		
+		si idioma = "Ingles" Entonces
+			Escribir "The registration was successful.";
+			Escribir "Press ENTER to continue.";
+		SiNo
+			si idioma = "Español" Entonces
+				Escribir "El regitro se realizo de forma correcta";
+				Escribir "Presione ENTER para continuar";
+			FinSi
+		FinSi
+		Esperar Tecla;
+		Login(usuarios, cantidad_usuarios, idioma, alojamiento);
+	FinSi
+	
+FinSubProceso
+
+SubProceso mostrar(cantidad_usuarios por valor, usuarios Por Referencia, idioma Por Valor, Alojamiento Por Referencia)
+	Definir i Como Entero;
+	Definir j Como Entero;
+	Limpiar Pantalla;
+	Escribir "usuario - contraseña - correo - rol";
+	
+	Para i<-0 Hasta cantidad_usuarios-1 Hacer
+		Para j<-0 Hasta 3 Hacer
+			Escribir Sin Saltar usuarios[i,j],"  ";
+		FinPara
+		Escribir "";
+	FinPara
+	Esperar Tecla;
+	Login(usuarios, cantidad_usuarios, idioma, alojamiento);
+FinSubProceso
+
+///MENU LOCADO
+SubProceso menuingraeso(aux Por Valor, Alojamiento Por Referencia, cantidadmueble Por Referencia)
+	Definir menu Como Entero;	
+	Definir salir Como Logico;
+	salir <- Falso;
+	
+	Alojamiento[aux,0,0] <- ConvertirATexto(cantidadmueble); <
+	
+	Repetir
+		Limpiar Pantalla;
+		Escribir "Menu";
+		Escribir "1. Tipo de alojamiento";
+		Escribir "2. Ver Alojamientos Registrados";
+		Escribir "3. Eliminar Alojamiento"; 
+		Escribir "0. Sali";
+		leer menu;
+		segun menu Hacer
+			1: 
+				tipoaljamiento(Alojamiento, aux, cantidadmueble);
+			2: 
+				mostrar_aloj(aux, Alojamiento, cantidadmueble);
+			3: 
+				Eliminar(aux, Alojamiento,cantidadmueble);
+			0: 
+				Escribir "Hasta Luego";
+				salir <- verdadero;
+				Esperar tecla;
+			De Otro Modo:
+				menuingraeso(aux, Alojamiento, cantidadmueble);
+		FinSegun
+	Hasta Que salir = verdadero 
+FinSubProceso
+SubProceso tipoaljamiento(Alojamiento Por Referencia, aux por valor, cantidadmueble Por Referencia)
+	Definir num, cantidad Como Entero;
+	Escribir "1. HOTEL";
+	Escribir "2. Complejo de caña";
+	Escribir "3. Departamento o Casa";
+	Leer num;
+	Segun num Hacer
+		1:
+			Escribir "Ingrese la cantidad de Habitaciones a ingresar";
+			Leer cantidad;
+			cargadealojamiento(aux,cantidadmueble, Alojamiento, cantidad);
+		2:
+			Escribir "Ingrese la cantidad de Cabañas a ingresar";
+			Leer cantidad;
+			cargadealojamiento(aux,cantidadmueble, Alojamiento, cantidad);
+		3:
+			Escribir "Ingrese la cantidad de Departametos o casas a ingresar";
+			Leer cantidad;
+			cargadealojamiento(aux,cantidadmueble, Alojamiento, cantidad);
+		De Otro Modo:
+			Escribir "Opcion Invalida, ingresa nuevamente";
+			//tipoaljamiento(aux, Alojamiento, cantidadmueble);
+	FinSegun
+	
+FinSubProceso
+SubProceso  cargadealojamiento(aux Por Referencia,cantidadmueble Por Valor, Alojamiento Por Referencia, cantidad Por Valor)
+	Definir i, j Como Entero;
+	Definir nombres Como Caracter;
+	definir salir Como Logico;
+	//el primer parametro de la matriz es el usuario
+	cantidad <- cantidadmueble + cantidad;
+	Para i<-cantidadmueble+1 Hasta cantidad Hacer
+		
+		Escribir "Nombre del Alojamiento N°", i;
+		Leer Alojamiento[aux,i,0];
+		Para j<-1 Hasta 2  Hacer
+			Si j=1 Entonces
+				Escribir "Capacidad del inmueble?";
+				Leer Alojamiento[aux,i,j];
+			SiNo
+				Escribir "Discrimine el precio";
+				Leer Alojamiento[aux,i,j];
+			FinSi
+		FinPara
+	FinPara
+	
+	cantidadmueble <- cantidad;
+	menuingraeso(aux, Alojamiento, cantidadmueble);
+	
+FinSubProceso
+SubProceso mostrar_aloj(aux por valor, Alojamiento Por Referencia, cantidadmueble Por Valor)
+	Definir i, j Como Entero;
+	
+	Escribir "Los alojamientos registrados son: ", cantidadmueble;
+	Escribir "";
+	para i<-1 hasta cantidadmueble Hacer
+		Escribir "El alojamiento N° ", i;
+		Escribir Alojamiento[aux,i,0];
+		Para j<-1 Hasta 3-1 Hacer
+			Si j=1 Entonces
+				Escribir Sin Saltar "La capacidad del inmueble es: ";
+				Escribir Alojamiento[aux,i,j];
+			SiNo
+				Escribir  Sin Saltar "El preico es de: $";
+				Escribir Alojamiento[aux,i,j];
+			FinSi
+		FinPara
+		Escribir "";
+	FinPara
+	Escribir "Presione una tecla para volver al menu"; 
+	Esperar tecla;
+	
+FinSubProceso
+
+SubProceso Eliminar(aux Por Valor, Alojamiento Por Referencia, cantidadmueble Por Referencia)
+	Definir num, i, j Como Entero;
+	mostrar_aloj(aux, Alojamiento, cantidadmueble);
+	
+	Repetir
+		Escribir "Elija el numero de alojamiento a eliminar"; 
+		leer num; //num representa la posicion del alojameinto a eliminar 
+	Hasta Que num>=1 y num<=cantidadmueble
+	
+	para i<-(num-1) hasta cantidadmueble-2 Hacer
+		Alojamiento[aux,i,0] <- Alojamiento[aux,i+1,0];
+		para j<-0 Hasta 3-1 Hacer
+			Alojamiento[aux,i,j] <- Alojamiento[aux,i+1,j];
+		FinPara
+	FinPara
+	
+	cantidadmueble<-cantidadmueble-1;	
+	
+	Esperar Tecla;	
+	
+FinSubProceso
+
+
